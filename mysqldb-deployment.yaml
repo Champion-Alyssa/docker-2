@@ -36,10 +36,10 @@ spec:
           resources: {}
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d/database.sql
-              name: mysqldb-claim0
+              name: mysqldb-claim
       restartPolicy: Always
       volumes:
-        - name: mysqldb-claim0
+        - name: mysqldb-claim
           persistentVolumeClaim:
-            claimName: mysqldb-claim0
+            claimName: mysqldb-claim
 status: {}
