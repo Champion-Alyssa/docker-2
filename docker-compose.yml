@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+
+  mysqldb:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - "./database.sql:/docker-entrypoint-initdb.d/database.sql"
+    ports:
+      - "3306:3306"
+
+  storage:
+    depends_on:
+      - mysqldb
+    image: richard2000wang/project1:storage
+    ports:
+      - "8090:8090"
+
+  backend:
+    image: richard2000wang/project1:backend
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: richard2000wang/project1:frontend
+    ports:
+      - "8091:8091"
+
+  analysis:
+    depends_on:
+      - mongodb
+    image: richard2000wang/project1:analysis
+    ports:
+      - "8100:8100"
+
+  auth:
+    depends_on:
+      - storage
+    image: richard2000wang/project1:latest
+    ports:
+      - "8200:8200"
+
+  results:
+    depends_on:
+      - analysis
+    image: richard2000wang/project1:latest
+    ports: 
+      - "5000:5000"
+
+networks:
+  default:
+    name: project1
